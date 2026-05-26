@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Héctor Rodríguez Pérez — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+  --bg:#080c18;
+  --surface:#0d1426;
+  --panel:#111a30;
+  --border:#1a2d4a;
+  --border2:#1e3a5f;
+  --text:#c8d8f0;
+  --muted:#4a6a8a;
+  --bright:#e8f2ff;
+  --cyan:#00d4ff;
+  --green:#00ff88;
+  --purple:#a78bfa;
+  --warn:#ffaa00;
+  --danger:#ff2d55;
+  --cyan-dim:rgba(0,212,255,0.08);
+  --green-dim:rgba(0,255,136,0.07);
+  --radius:10px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+
+/* ══ SCANLINE OVERLAY ══ */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:9999;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ══ NAV ══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:48px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  background:rgba(8,12,24,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;letter-spacing:0.1em;
+  color:var(--cyan);
+  display:flex;align-items:center;gap:0.5rem;
+}
+.nav-logo::before{content:'❯';opacity:0.5;font-size:0.7rem}
+.nav-links{display:flex;gap:0.25rem}
+.nav-links a{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.08em;
+  color:var(--muted);text-decoration:none;
+  padding:0.3rem 0.75rem;
+  border:1px solid transparent;
+  transition:all 0.15s;
+}
+.nav-links a:hover{color:var(--cyan);border-color:var(--border2);background:var(--cyan-dim)}
+.nav-cv{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.08em;
+  color:var(--green);
+  padding:0.3rem 0.9rem;
+  border:1px solid rgba(0,255,136,0.3);
+  background:var(--green-dim);
+  text-decoration:none;
+  transition:all 0.15s;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.nav-cv::before{content:'↓'}
+.nav-cv:hover{background:rgba(0,255,136,0.15);border-color:var(--green)}
+
+/* ══ HERO ══ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:6rem 2rem 4rem;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid var(--border);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size:50px 50px;
+  opacity:0.3;
+  mask-image:radial-gradient(ellipse 70% 80% at 30% 50%, black 20%, transparent 75%);
+}
+.hero-glow{
+  position:absolute;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+  top:-100px;right:-100px;
+  pointer-events:none;
+}
+.hero-glow2{
+  position:absolute;
+  width:400px;height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,255,136,0.04) 0%, transparent 70%);
+  bottom:-50px;left:10%;
+  pointer-events:none;
+}
+.hero-inner{
+  position:relative;z-index:1;
+  max-width:900px;
+}
+.terminal-prompt{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;color:var(--muted);
+  margin-bottom:2rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.terminal-prompt .p-green{color:var(--green)}
+.terminal-prompt .p-cyan{color:var(--cyan)}
+.terminal-prompt .p-cursor{
+  display:inline-block;width:8px;height:14px;
+  background:var(--cyan);
+  animation:blink-cur 1s step-end infinite;
+  vertical-align:middle;margin-left:2px;
+}
+@keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
+
+h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3.5rem,9vw,8rem);
+  font-weight:800;
+  line-height:0.92;
+  letter-spacing:-0.02em;
+  margin-bottom:1.5rem;
+}
+h1 .n1{color:var(--bright)}
+h1 .n2{
+  color:transparent;
+  -webkit-text-stroke:1px rgba(0,212,255,0.25);
+}
+h1 .n3{color:var(--cyan)}
+
+.hero-role{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;
+  color:var(--muted);
+  border-left:2px solid var(--cyan);
+  padding-left:1rem;
+  margin-bottom:2rem;
+  line-height:2;
+}
+.hero-role span{color:var(--cyan)}
+.hero-role .gr{color:var(--green)}
+
+.hero-btns{display:flex;gap:0.75rem;flex-wrap:wrap}
+.btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;letter-spacing:0.08em;
+  padding:0.65rem 1.6rem;
+  text-decoration:none;
+  transition:all 0.15s;
+  display:inline-flex;align-items:center;gap:0.5rem;
+}
+.btn-cyan{
+  background:var(--cyan);color:#080c18;font-weight:700;
+  border:1px solid var(--cyan);
+}
+.btn-cyan:hover{background:#00eeff;box-shadow:0 0 20px rgba(0,212,255,0.3)}
+.btn-ghost{
+  border:1px solid var(--border2);color:var(--muted);
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim)}
+.btn-dl{
+  border:1px solid rgba(0,255,136,0.3);
+  color:var(--green);background:var(--green-dim);
+}
+.btn-dl:hover{background:rgba(0,255,136,0.15);box-shadow:0 0 16px rgba(0,255,136,0.15)}
+
+/* ══ STAT PILLS ══ */
+.hero-stats{
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+  margin-top:3rem;
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+}
+.stat-pill{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem;
+  display:flex;align-items:center;gap:0.5rem;
+  color:var(--muted);
+}
+.stat-pill .val{font-size:1.4rem;font-weight:700;color:var(--cyan);line-height:1}
+.stat-pill .lbl{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase}
+
+/* ══ SECTION WRAPPER ══ */
+.section{border-bottom:1px solid var(--border)}
+.sec-hdr{
+  padding:3.5rem 2rem 2rem;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:1px solid var(--border);
+}
+.sec-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:0.6rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.sec-tag::before{content:'//'}
+h2{
+  font-family:'Syne',sans-serif;
+  font-size:2.2rem;font-weight:800;
+  color:var(--bright);
+  letter-spacing:-0.01em;
+}
+.sec-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.1em;
+  padding:0.3rem 0.8rem;
+  border:1px solid var(--border2);
+  color:var(--muted);
+  background:var(--surface);
+}
+
+/* ══ PROJECTS ══ */
+.proj-list{display:flex;flex-direction:column}
+.proj-row{
+  display:grid;grid-template-columns:56px 1fr 220px;
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+  cursor:default;
+}
+.proj-row:last-child{border-bottom:none}
+.proj-row:hover{background:var(--surface)}
+.proj-idx{
+  display:flex;align-items:flex-start;justify-content:center;
+  padding-top:2rem;
+  border-right:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;color:var(--muted);
+}
+.proj-body{padding:1.8rem 2rem}
+.proj-title{
+  font-family:'Syne',sans-serif;
+  font-size:1.6rem;font-weight:800;
+  color:var(--bright);
+  margin-bottom:0.35rem;
+  transition:color 0.15s;
+}
+.proj-row:hover .proj-title{color:var(--cyan)}
+.proj-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.67rem;color:var(--muted);
+  margin-bottom:0.8rem;
+  letter-spacing:0.05em;
+}
+.proj-desc{
+  color:var(--muted);font-size:0.88rem;font-weight:300;
+  max-width:560px;margin-bottom:1.1rem;line-height:1.75;
+}
+.tags{display:flex;flex-wrap:wrap;gap:0.35rem}
+.tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.05em;
+  padding:0.2rem 0.6rem;
+  border:1px solid;border-radius:2px;
+}
+.tc{color:var(--cyan);border-color:rgba(0,212,255,0.25);background:var(--cyan-dim)}
+.tg{color:var(--green);border-color:rgba(0,255,136,0.2);background:var(--green-dim)}
+.tp{color:var(--purple);border-color:rgba(167,139,250,0.25);background:rgba(167,139,250,0.07)}
+.tw{color:var(--muted);border-color:var(--border2);background:rgba(255,255,255,0.03)}
+.proj-side{
+  border-left:1px solid var(--border);
+  padding:1.8rem 1.4rem;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.proj-type{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.6rem;letter-spacing:0.12em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:0.8rem;
+}
+.stack-list{display:flex;flex-direction:column;gap:0.35rem}
+.stack-i{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;color:var(--muted);
+  display:flex;align-items:center;gap:0.45rem;
+}
+.stack-i::before{content:'›';color:var(--cyan);font-size:0.8rem}
+.proj-arr{
+  font-size:1.2rem;color:var(--muted);
+  align-self:flex-end;
+  transition:all 0.15s;
+}
+.proj-row:hover .proj-arr{color:var(--cyan);transform:translate(3px,-3px)}
+
+/* FEATURED BADGE */
+.feat-strip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;
+  background:linear-gradient(90deg,rgba(0,212,255,0.12),transparent);
+  border-bottom:1px solid var(--border);
+  padding:0.4rem 2rem;
+  color:var(--cyan);
+  display:flex;align-items:center;gap:0.5rem;
+}
+.feat-strip::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);animation:pulse 1.5s infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0.4)}50%{box-shadow:0 0 0 6px rgba(0,212,255,0)}}
+
+/* ══ TIMELINE / EXPERIENCIA ══ */
+.timeline-wrap{
+  display:grid;grid-template-columns:1fr 2px 1fr;
+  gap:0;
+  padding:0 0 3rem;
+}
+.timeline-line{
+  background:linear-gradient(to bottom, transparent, var(--cyan) 5%, var(--cyan) 95%, transparent);
+  position:relative;
+}
+.timeline-col{padding:2rem 0}
+.timeline-col.left{padding-right:3rem;text-align:right}
+.timeline-col.right{padding-left:3rem}
+
+.t-item{
+  position:relative;
+  margin-bottom:2.5rem;
+}
+.t-item:last-child{margin-bottom:0}
+
+/* dot on the line */
+.t-dot{
+  position:absolute;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--bg);
+  border:2px solid var(--cyan);
+  top:6px;
+}
+.left .t-dot{right:-3rem;transform:translateX(50%);margin-right:-5px}
+.right .t-dot{left:-3rem;transform:translateX(-50%);margin-left:-5px}
+
+.t-year{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.1em;
+  color:var(--cyan);margin-bottom:0.3rem;
+}
+.t-role{
+  font-family:'Syne',sans-serif;
+  font-size:1rem;font-weight:700;
+  color:var(--bright);margin-bottom:0.15rem;
+}
+.t-org{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem;color:var(--muted);
+  margin-bottom:0.5rem;
+}
+.t-bullets{list-style:none;margin-top:0.4rem}
+.t-bullets li{
+  font-size:0.82rem;color:var(--muted);font-weight:300;
+  padding:0.1rem 0;
+  display:flex;align-items:flex-start;gap:0.4rem;
+}
+.left .t-bullets li{justify-content:flex-end;flex-direction:row-reverse}
+.t-bullets li::before{
+  content:'›';color:var(--cyan);font-size:0.8rem;flex-shrink:0;margin-top:1px;
+}
+
+/* ══ FORMACIÓN ══ */
+.edu-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1px;
+  background:var(--border);
+}
+.edu-card{
+  background:var(--bg);
+  padding:2rem;
+  transition:background 0.15s;
+}
+.edu-card:hover{background:var(--surface)}
+.edu-year{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.1em;
+  color:var(--cyan);margin-bottom:0.5rem;
+}
+.edu-name{
+  font-family:'Syne',sans-serif;
+  font-size:1.05rem;font-weight:700;
+  color:var(--bright);margin-bottom:0.2rem;
+  line-height:1.3;
+}
+.edu-where{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem;color:var(--muted);
+}
+
+/* ══ SKILLS ══ */
+.skills-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:1px;background:var(--border);
+}
+.skill-card{
+  background:var(--bg);
+  padding:1.2rem 1.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;color:var(--muted);
+  display:flex;align-items:center;gap:0.5rem;
+  transition:background 0.15s,color 0.15s;
+}
+.skill-card:hover{background:var(--surface);color:var(--cyan)}
+.skill-card::before{content:'_';color:var(--cyan);opacity:0.5}
+
+/* ══ CONTACT ══ */
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+}
+.contact-l{
+  padding:3rem 2rem;
+  border-right:1px solid var(--border);
+}
+.contact-l p{color:var(--muted);margin-top:0.8rem;font-size:0.9rem;font-weight:300;max-width:340px;line-height:1.8}
+.contact-r{
+  padding:2.5rem 2rem;
+  display:flex;flex-direction:column;gap:0.6rem;
+}
+.clink{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.2rem;
+  border:1px solid var(--border);
+  text-decoration:none;
+  background:var(--surface);
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;
+  transition:all 0.15s;
+}
+.clink:hover{border-color:var(--cyan);background:var(--cyan-dim);color:var(--cyan)}
+.clink .cl-val{font-size:0.68rem;color:var(--muted)}
+
+/* CV DOWNLOAD BANNER */
+.cv-banner{
+  margin:2rem;
+  padding:1.5rem 2rem;
+  border:1px solid rgba(0,255,136,0.2);
+  background:var(--green-dim);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;
+}
+.cv-banner-txt h3{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--bright);
+}
+.cv-banner-txt p{font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+
+/* ══ FOOTER ══ */
+footer{
+  padding:1.5rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem;color:var(--muted);
+  letter-spacing:0.05em;
+  border-top:1px solid var(--border);
+}
+
+/* ══ ANIMS ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-inner>*{opacity:0;animation:fadeUp 0.6s ease forwards}
+.terminal-prompt{animation-delay:0.05s}
+h1{animation-delay:0.15s}
+.hero-role{animation-delay:0.3s}
+.hero-btns{animation-delay:0.45s}
+.hero-stats{animation-delay:0.6s}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:780px){
+  nav{padding:0 1rem}
+  .nav-links{display:none}
+  .hero{padding:5rem 1rem 3rem}
+  .sec-hdr{flex-direction:column;align-items:flex-start;gap:0.5rem;padding:2.5rem 1rem 1.5rem}
+  .proj-row{grid-template-columns:1fr}
+  .proj-idx{display:none}
+  .proj-side{border-left:none;border-top:1px solid var(--border)}
+  .timeline-wrap{grid-template-columns:1fr;gap:0}
+  .timeline-line{display:none}
+  .timeline-col.left{text-align:left;padding-right:0;padding-left:1rem;border-left:2px solid var(--cyan)}
+  .timeline-col.right{padding-left:1rem;border-left:2px solid var(--cyan)}
+  .left .t-dot,.right .t-dot{display:none}
+  .left .t-bullets li{justify-content:flex-start;flex-direction:row}
+  .contact-grid{grid-template-columns:1fr}
+  .contact-l{border-right:none;border-bottom:1px solid var(--border)}
+  footer{flex-direction:column;gap:0.3rem;text-align:center}
+  .cv-banner{flex-direction:column;align-items:flex-start;margin:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">hrp@portfolio:~$</div>
+  <div class="nav-links">
+    <a href="#proyectos">proyectos</a>
+    <a href="#experiencia">experiencia</a>
+    <a href="#formacion">formación</a>
+    <a href="#contacto">contacto</a>
+  </div>
+  <a href="CV_Hector_Rodriguez_Perez.pdf" download class="nav-cv">descargar CV</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="terminal-prompt">
+      <span class="p-green">hrp</span><span style="color:var(--muted)">@</span><span class="p-cyan">madrid</span><span style="color:var(--muted)">:~$ cat info.txt</span>
+      <span class="p-cursor"></span>
+    </div>
+    <h1>
+      <span class="n1">HÉCTOR</span><br>
+      <span class="n2">RODRÍGUEZ</span><br>
+      <span class="n3">PÉREZ</span>
+    </h1>
+    <div class="hero-role">
+      <span>rol</span> ········· Técnico en Sistemas Informáticos &amp; Redes<br>
+      <span>estado</span> ······ <span class="gr">● disponible e inmediato</span><br>
+      <span>ubicación</span> ··· Madrid, España<br>
+      <span>contacto</span> ···· traker616@gmail.com · 651 50 44 64
+    </div>
+    <div class="hero-btns">
+      <a href="#proyectos" class="btn btn-cyan">ver proyectos</a>
+      <a href="#experiencia" class="btn btn-ghost">experiencia</a>
+      <a href="CV_Hector_Rodriguez_Perez.pdf" download class="btn btn-dl">↓ descargar CV</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-pill"><span class="val">3</span><div><div class="lbl">proyectos</div><div class="lbl">personales</div></div></div>
+      <div class="stat-pill"><span class="val">7</span><div><div class="lbl">experiencias</div><div class="lbl">laborales</div></div></div>
+      <div class="stat-pill"><span class="val">2</span><div><div class="lbl">títulos</div><div class="lbl">FP</div></div></div>
+      <div class="stat-pill"><span class="val" style="color:var(--green)">∞</span><div><div class="lbl">disponibilidad</div><div class="lbl">inmediata</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<section class="section" id="proyectos">
+  <div class="sec-hdr">
+    <div>
+      <p class="sec-tag">proyectos personales</p>
+      <h2>Lo que he construido</h2>
+    </div>
+    <span class="sec-badge">03 projects</span>
+  </div>
+  <div class="proj-list">
+
+    <div class="feat-strip">proyecto destacado — HoneyShield AI v4.0</div>
+    <div class="proj-row">
+      <div class="proj-idx">01</div>
+      <div class="proj-body">
+        <div class="proj-title">HoneyShield AI</div>
+        <div class="proj-sub">v4.0.0 · Electron Desktop App · Ciberseguridad</div>
+        <p class="proj-desc">Aplicación de escritorio con IA adaptativa para detección y análisis de intrusiones mediante tecnología honeypot. Sistema de licencias por suscripción vía Stripe (Free / Monthly / Yearly / Lifetime), panel de desarrollador y servidor backend con licencias firmadas HMAC-SHA256. Compilable para Windows y Linux.</p>
+        <div class="tags">
+          <span class="tag tc">Electron 28</span>
+          <span class="tag tc">Node.js</span>
+          <span class="tag tc">Express</span>
+          <span class="tag tg">Stripe Payments</span>
+          <span class="tag tg">HMAC-SHA256</span>
+          <span class="tag tp">IA adaptativa</span>
+          <span class="tag tp">Honeypot</span>
+          <span class="tag tw">Win / Linux</span>
+        </div>
+      </div>
+      <div class="proj-side">
+        <div>
+          <div class="proj-type">desktop app</div>
+          <div class="stack-list">
+            <span class="stack-i">Electron 28</span>
+            <span class="stack-i">Node.js + Express</span>
+            <span class="stack-i">Stripe API</span>
+            <span class="stack-i">Railway deploy</span>
+          </div>
+        </div>
+        <span class="proj-arr">↗</span>
+      </div>
+    </div>
+
+    <div class="proj-row">
+      <div class="proj-idx">02</div>
+      <div class="proj-body">
+        <div class="proj-title">Gestión FCT — Inglán</div>
+        <div class="proj-sub">TFGC · Plataforma web · PHP + MySQL</div>
+        <p class="proj-desc">Plataforma web multi-rol para la gestión de Formación en Centros de Trabajo del C.F.P. Inglán. Roles: admin, tutor de centro, tutor de empresa y alumno. Incluye asistente IA con contexto de base de datos en tiempo real, buscadores especializados, generación de documentos oficiales y sistema completo de asignaciones.</p>
+        <div class="tags">
+          <span class="tag tc">PHP 8</span>
+          <span class="tag tc">MySQL</span>
+          <span class="tag tc">HTML/CSS/JS</span>
+          <span class="tag tg">Asistente IA</span>
+          <span class="tag tg">Multi-rol</span>
+          <span class="tag tp">Generación docs</span>
+          <span class="tag tw">TFGC</span>
+        </div>
+      </div>
+      <div class="proj-side">
+        <div>
+          <div class="proj-type">web platform</div>
+          <div class="stack-list">
+            <span class="stack-i">PHP 8</span>
+            <span class="stack-i">MySQL</span>
+            <span class="stack-i">IA integrada</span>
+            <span class="stack-i">4 roles de usuario</span>
+          </div>
+        </div>
+        <span class="proj-arr">↗</span>
+      </div>
+    </div>
+
+    <div class="proj-row">
+      <div class="proj-idx">03</div>
+      <div class="proj-body">
+        <div class="proj-title">Madrid Racing Club</div>
+        <div class="proj-sub">Página web oficial · HTML / CSS / JS</div>
+        <p class="proj-desc">Web oficial para el Madrid Racing Club con identidad visual propia. Sección hero, tienda de merchandising oficial, noticias del club y diseño deportivo agresivo construido íntegramente con tecnologías web nativas sin frameworks. Paleta rojo-negro, tipografía Bebas Neue y animaciones CSS puras.</p>
+        <div class="tags">
+          <span class="tag tc">HTML5</span>
+          <span class="tag tc">CSS3</span>
+          <span class="tag tc">JavaScript</span>
+          <span class="tag tg">Diseño deportivo</span>
+          <span class="tag tg">Tienda online</span>
+          <span class="tag tw">Sin frameworks</span>
+        </div>
+      </div>
+      <div class="proj-side">
+        <div>
+          <div class="proj-type">web page</div>
+          <div class="stack-list">
+            <span class="stack-i">HTML5 + CSS3</span>
+            <span class="stack-i">JavaScript puro</span>
+            <span class="stack-i">Responsive</span>
+            <span class="stack-i">0 dependencias</span>
+          </div>
+        </div>
+        <span class="proj-arr">↗</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCIA TIMELINE -->
+<section class="section" id="experiencia">
+  <div class="sec-hdr">
+    <div>
+      <p class="sec-tag">trayectoria profesional</p>
+      <h2>Experiencia</h2>
+    </div>
+    <span class="sec-badge">07 posiciones</span>
+  </div>
+
+  <div class="timeline-wrap">
+    <!-- IZQUIERDA -->
+    <div class="timeline-col left">
+
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-year">2025</div>
+        <div class="t-role">Técnico Informático en Prácticas</div>
+        <div class="t-org">Colegio Nuestra Señora de la Vega</div>
+        <ul class="t-bullets">
+          <li>Desarrollo de app web para gestión de incidencias</li>
+          <li>Resolución de incidencias técnicas del centro</li>
+          <li>Reparación y mantenimiento de equipos</li>
+          <li>Soporte técnico a usuarios</li>
+        </ul>
+      </div>
+
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-year">2025</div>
+        <div class="t-role">Técnico de Sistemas Informáticos</div>
+        <div class="t-org">IES Salvador Allende · Prácticas</div>
+        <ul class="t-bullets">
+          <li>Rehabilitación de bancos de trabajo</li>
+          <li>Crimpado de cable Ethernet y testeo</li>
+          <li>Instalación de access points WiFi</li>
+          <li>Reparación de ordenadores y portátiles</li>
+        </ul>
+      </div>
+
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-year">2022</div>
+        <div class="t-role">Ayudante de Carpintería</div>
+        <div class="t-org">Autónomo</div>
+        <ul class="t-bullets">
+          <li>Carga y descarga de camiones</li>
+          <li>Lijado de puertas y desmontaje de muebles</li>
+          <li>Preparación de herramientas y área de trabajo</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- LÍNEA CENTRAL -->
+    <div class="timeline-line"></div>
+
+    <!-- DERECHA -->
+    <div class="timeline-col right">
+
+      <div class="t-item" style="margin-top:0">
+        <div class="t-dot"></div>
+        <div class="t-year">2025 · FCT</div>
+        <div class="t-role">Desarrollador Web en Prácticas</div>
+        <div class="t-org">C.F.P. Inglán</div>
+        <ul class="t-bullets">
+          <li>App web completa de gestión FCT</li>
+          <li>Sistema multi-rol: admin, tutores, alumnos</li>
+          <li>PHP, MySQL, HTML/CSS, JavaScript</li>
+          <li>Asistente IA integrado con contexto BD</li>
+        </ul>
+      </div>
+
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-year">2025</div>
+        <div class="t-role">Auxiliar de Limpieza</div>
+        <div class="t-org">Krispy Kreme</div>
+        <ul class="t-bullets">
+          <li>Limpieza de local y zona de producción</li>
+          <li>Mantenimiento de zonas comunes y cámara</li>
+        </ul>
+      </div>
+
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-year">2024</div>
+        <div class="t-role">Técnico de Telecomunicaciones</div>
+        <div class="t-org">Sancorral S.L. · Prácticas</div>
+        <ul class="t-bullets">
+          <li>Instalación de antenas en viviendas</li>
+          <li>Reparación de aparatos</li>
+          <li>Montaje de circuito eléctrico</li>
+        </ul>
+      </div>
+
+      <div class="t-item">
+        <div class="t-dot" style="border-color:var(--green)"></div>
+        <div class="t-year" style="color:var(--green)">2022 — Actualidad</div>
+        <div class="t-role">Técnico de Equipos Microinformáticos</div>
+        <div class="t-org">Autónomo</div>
+        <ul class="t-bullets">
+          <li>Reparación y montaje de ordenadores</li>
+          <li>Configuración Windows, Linux y Mac</li>
+          <li>Gestión de bases de datos</li>
+          <li>Auxiliar de informática</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FORMACIÓN -->
+<section class="section" id="formacion">
+  <div class="sec-hdr">
+    <div>
+      <p class="sec-tag">educación</p>
+      <h2>Formación</h2>
+    </div>
+    <span class="sec-badge">C.F.P. Inglán</span>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-year">2024 – 2025</div>
+      <div class="edu-name">CFGS Administración de Sistemas Informáticos en Red</div>
+      <div class="edu-where">C.F.P. Inglán · ASIR</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">2024</div>
+      <div class="edu-name">CFGM Instalaciones de Telecomunicaciones</div>
+      <div class="edu-where">C.F.P. Inglán</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year" style="color:var(--green)">Competencias</div>
+      <div class="edu-name">Liderazgo · Trabajo en equipo</div>
+      <div class="edu-where">Compañerismo · Aprendizaje rápido · Iniciativa</div>
+    </div>
+  </div>
+
+  <div style="padding:0.5rem 0">
+    <div class="skills-grid">
+      <div class="skill-card">JavaScript</div>
+      <div class="skill-card">Node.js</div>
+      <div class="skill-card">Electron</div>
+      <div class="skill-card">PHP 8</div>
+      <div class="skill-card">MySQL</div>
+      <div class="skill-card">HTML5 / CSS3</div>
+      <div class="skill-card">Python</div>
+      <div class="skill-card">Express</div>
+      <div class="skill-card">Stripe API</div>
+      <div class="skill-card">Git / GitHub</div>
+      <div class="skill-card">Linux</div>
+      <div class="skill-card">Windows Server</div>
+      <div class="skill-card">Redes TCP/IP</div>
+      <div class="skill-card">Ciberseguridad</div>
+      <div class="skill-card">Crimpado Ethernet</div>
+      <div class="skill-card">Soporte técnico</div>
+    </div>
+  </div>
+</section>
+
+<!-- CV BANNER -->
+<div class="cv-banner">
+  <div class="cv-banner-txt">
+    <h3>Currículum Vitae — Héctor Rodríguez Pérez</h3>
+    <p>Disponible en PDF · Actualizado 2025 · Disponibilidad total e inmediata</p>
+  </div>
+  <a href="CV_Hector_Rodriguez_Perez.pdf" download class="btn btn-dl" style="white-space:nowrap">↓ descargar CV</a>
+</div>
+
+<!-- CONTACTO -->
+<section class="section" id="contacto">
+  <div class="contact-grid">
+    <div class="contact-l">
+      <p class="sec-tag">contacto</p>
+      <h2>Hablemos</h2>
+      <p>Disponibilidad total e inmediata. Si tienes un proyecto, una oferta o simplemente quieres conocerme, escríbeme.</p>
+    </div>
+    <div class="contact-r">
+      <a href="mailto:traker616@gmail.com" class="clink">
+        <span>traker616@gmail.com</span>
+        <span class="cl-val">email →</span>
+      </a>
+      <a href="tel:651504464" class="clink">
+        <span>651 50 44 64</span>
+        <span class="cl-val">teléfono →</span>
+      </a>
+      <a href="https://instagram.com/hectoorrodriguez" target="_blank" class="clink">
+        <span>@hectoorrodriguez</span>
+        <span class="cl-val">instagram →</span>
+      </a>
+      <a href="https://github.com/" target="_blank" class="clink">
+        <span>github.com/TU_USUARIO</span>
+        <span class="cl-val">github →</span>
+      </a>
+      <a href="CV_Hector_Rodriguez_Perez.pdf" download class="clink" style="border-color:rgba(0,255,136,0.2);color:var(--green)">
+        <span>CV_Hector_Rodriguez_Perez.pdf</span>
+        <span class="cl-val">↓ descargar</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>hrp@portfolio:~$ █</span>
+  <span>Héctor Rodríguez Pérez · Madrid · 2025</span>
+</footer>
+
+</body>
+</html>
